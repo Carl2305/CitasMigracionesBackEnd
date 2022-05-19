@@ -2,6 +2,8 @@ package com.cita.migraciones.entitylayer;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,6 +23,7 @@ import lombok.Setter;
 public class Recibo {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRecibo;
 	private String codigoVerificacion;
 	
@@ -28,7 +31,4 @@ public class Recibo {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date fechaPago;
 	
-	public Recibo(int idRecibo) {
-		this.idRecibo = idRecibo;
-	}
 }
