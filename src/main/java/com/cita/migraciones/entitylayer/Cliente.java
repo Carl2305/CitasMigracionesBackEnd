@@ -16,18 +16,25 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Entity
-@Table(name = "recibo")
-public class Recibo {
-
+@Table(name = "cliente")
+public class Cliente {
+	
 	@Id
-	private int idRecibo;
-	private String codigoVerificacion;
+	private String DNI;
+	
+	private String nombre;
+	private String apePaterno;
+	private String apeMaterno;
+	private String correo;
+	private String password;
+	private String direccion;
 	
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Date fechaPago;
+	private Date fechaNac;
 	
-	public Recibo(int idRecibo) {
-		this.idRecibo = idRecibo;
+	public Cliente(String DNI) {
+		this.DNI = DNI;
 	}
+
 }
