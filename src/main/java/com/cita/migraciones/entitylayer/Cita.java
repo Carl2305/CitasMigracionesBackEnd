@@ -28,7 +28,7 @@ public class Cita {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCita;
-	private String DNI;
+	
 	private String correo;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -48,6 +48,11 @@ public class Cita {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idRecibo")
 	private Recibo recibo;
+	
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DNI")
+	private Cliente cliente;
 	
 	public Cita(int idCita) {
 		this.idCita = idCita;
