@@ -30,8 +30,6 @@ public class Cita {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCita;
 	
-	private String correo;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date fechaRegistro;
