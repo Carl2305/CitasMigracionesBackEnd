@@ -8,7 +8,6 @@ import com.cita.migraciones.entitylayer.Recibo;
 public interface ReciboService {
 	public List<Recibo> listRecibo();
 	public Optional<Recibo> getRecibo(int idRecibo);
-	public Recibo saveRecibo(Recibo recibo);
-	public Recibo updateRecibo(Recibo recibo);
+	public Recibo saveUpdateRecibo(Recibo recibo);
 	public void deleteRecibo(int idRecibo);
 }

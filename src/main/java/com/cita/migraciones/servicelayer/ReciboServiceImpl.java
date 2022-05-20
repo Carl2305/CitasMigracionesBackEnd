@@ -25,12 +25,7 @@ public class ReciboServiceImpl implements ReciboService {
 	}
 
 	@Override
-	public Recibo saveRecibo(Recibo recibo) {
-		return repository.save(recibo);
-	}
-
-	@Override
-	public Recibo updateRecibo(Recibo recibo) {
+	public Recibo saveUpdateRecibo(Recibo recibo) {
 		return repository.save(recibo);
 	}
 

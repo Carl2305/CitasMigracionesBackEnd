@@ -41,13 +41,13 @@ public class ReciboController {
 	@ResponseBody
 	public ResponseEntity<Recibo> saveRecibo(@RequestBody Recibo recibo){
 		recibo.setIdRecibo(0);
-		return new ResponseEntity<>(reciboService.saveRecibo(recibo), HttpStatus.OK);
+		return new ResponseEntity<>(reciboService.saveUpdateRecibo(recibo), HttpStatus.OK);
 	}
 	
 	@PutMapping
 	@ResponseBody
 	public ResponseEntity<Recibo> updateRecibo(@RequestBody Recibo recibo){
-		return new ResponseEntity<>(reciboService.saveRecibo(recibo), HttpStatus.OK);
+		return new ResponseEntity<>(reciboService.saveUpdateRecibo(recibo), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{idRecibo}")
