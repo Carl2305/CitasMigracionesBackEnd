@@ -34,5 +34,9 @@ public class ClienteServiceImpl implements ClienteService{
 	public Optional<Cliente> getCliente(String dni) {
 		return repository.findById(dni);
 	}
-
+	
+	@Override
+	public List<Cliente> listaClienteporDni(String DNI) {
+	return repository.listaporDNI(DNI);
+	}
 }
