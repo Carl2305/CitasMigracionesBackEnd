@@ -1,8 +1,8 @@
 package com.cita.migraciones.controller;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,48 +16,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.cita.migraciones.entitylayer.Cita;
-import com.cita.migraciones.servicelayer.CitaService;
+
+import com.cita.migraciones.entitylayer.Cupo;
+import com.cita.migraciones.servicelayer.CupoService;
 
 @RestController
-@RequestMapping("/api/cita")
+@RequestMapping("/api/cupo")
 @CrossOrigin
-public class CitaController {
+public class CupoController {
 	@Autowired
-	private CitaService citaService;
+	private CupoService cupoService;
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Cita>> listCita(){
-		return new ResponseEntity<>(citaService.listCita(), HttpStatus.OK);
+	public ResponseEntity<List<Cupo>> listCupo(){
+		return new ResponseEntity<>(cupoService.listCupo(), HttpStatus.OK);
 	}
 	
-	
-	@GetMapping("/{idCita}")
+	@GetMapping("/{idCupo}")
 	@ResponseBody
-	public ResponseEntity<Optional<Cita>> getRecibo(@PathVariable(name = "idCita") int idCita){
-		return new ResponseEntity<>(citaService.getCita(idCita), HttpStatus.OK);
+	public ResponseEntity<Optional<Cupo>> getRecibo(@PathVariable(name = "idCupo") int idCupo){
+		return new ResponseEntity<>(cupoService.getCupo(idCupo), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Cita> saveRecibo(@RequestBody Cita cita){
-		cita.setIdCita(0);
-		cita.setFechaRegistro(new Date());
-		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
+	public ResponseEntity<Cupo> saveRecibo(@RequestBody Cupo cupo){
+		cupo.setIdCupo(0);
+		cupo.setEstado(false);
+		return new ResponseEntity<>(cupoService.saveAndUpdateCupo(cupo), HttpStatus.OK);
 	}
 	
 	@PutMapping
 	@ResponseBody
-	public ResponseEntity<Cita> updateRecibo(@RequestBody Cita cita){
-		cita.setFechaRegistro(new Date());
-		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
+	public ResponseEntity<Cupo> updateRecibo(@RequestBody Cupo cupo){
+		cupo.setEstado(true);
+		return new ResponseEntity<>(cupoService.saveAndUpdateCupo(cupo), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{idCita}")
+	@DeleteMapping("/{idCupo}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCita") int idCita){
-		citaService.deleteCita(idCita);
+	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
+		cupoService.deteleCupo(idCupo);
 		return new ResponseEntity<>("Cita Eliminada Correctamente", HttpStatus.OK);
 	}
 }

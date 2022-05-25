@@ -24,7 +24,8 @@ public class Recibo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idRecibo;
+	private int id_recibo;
+	private String codigoVoucher;
 	private String codigoVerificacion;
 	
 	@Temporal(TemporalType.DATE)

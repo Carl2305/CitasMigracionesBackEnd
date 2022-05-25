@@ -10,4 +10,6 @@ public interface ReciboService {
 	public Optional<Recibo> getRecibo(int idRecibo);
 	public Recibo saveUpdateRecibo(Recibo recibo);
 	public void deleteRecibo(int idRecibo);
+	
+	public abstract List <Recibo> listaReciboPorID(String codigoVoucher);
 }

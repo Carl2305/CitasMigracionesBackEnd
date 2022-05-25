@@ -11,5 +11,7 @@ public interface ClienteService {
 	public Cliente saveUpdateCliente(Cliente cliente);
 	public List<Cliente> listCliente();
 	public Optional<Cliente> getCliente(String dni);
+	public abstract List <Cliente> listaClienteporDni(String DNI);
+	public abstract List <Cliente> listaClienteporCorreo(String correo);
 	
 }

@@ -1,10 +1,12 @@
 package com.cita.migraciones.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +41,38 @@ public class ReciboController {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Recibo> saveRecibo(@RequestBody Recibo recibo){
-		recibo.setIdRecibo(0);
-		return new ResponseEntity<>(reciboService.saveUpdateRecibo(recibo), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> saveRecibo(@RequestBody Recibo recibo){
+		
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		
+		try
+		{
+			List<Recibo> lstRecibo = reciboService.listaReciboPorID(recibo.getCodigoVoucher());
+			
+			if (CollectionUtils.isEmpty(lstRecibo)) 
+					{
+						recibo.setId_recibo(0);
+						Recibo objSalida = reciboService.saveUpdateRecibo(recibo);
+						if (objSalida == null) {
+							salida.put("mensaje", "Error en el registro");
+						} else {
+							salida.put("mensaje", "Registro exitoso");
+						}
+					} 
+					else 
+					{
+						salida.put("mensaje", "El codigo de voucher ya fue usado : " + recibo.getCodigoVoucher());
+					}
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en el registro " + e.getMessage());
+			salida.put("status", "error");
+		}
+		
+		return ResponseEntity.ok(salida);
+		
 	}
 	
 	@PutMapping

@@ -33,5 +33,11 @@ public class ReciboServiceImpl implements ReciboService {
 	public void deleteRecibo(int idRecibo) {
 		repository.deleteById(idRecibo);
 	}
+	
+	@Override
+	public List<Recibo> listaReciboPorID(String codigoVoucher) {
+		// TODO Auto-generated method stub
+		return repository.listaReciboPorID(codigoVoucher);
+	}
 
 }

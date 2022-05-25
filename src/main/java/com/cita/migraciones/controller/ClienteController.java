@@ -1,12 +1,14 @@
 package com.cita.migraciones.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +32,7 @@ public class ClienteController {
 	@Autowired
 	private ClienteService clienteService;
 	
-	@GetMapping
-	@ResponseBody
-	public ResponseEntity<Optional<Cliente>> listCliente(){
-		return new ResponseEntity<>(clienteService.getCliente("72486510"), HttpStatus.OK);
-	}
-	
+
 	@PostMapping("/signIn")
 	@ResponseBody
 	public ResponseEntity<SignInResponseDTO> LogIn(@RequestBody SignInRequestDTO signIn){
@@ -54,20 +51,59 @@ public class ClienteController {
 	
 	@PostMapping("/signUp")
 	@ResponseBody
-	public ResponseEntity<Cliente> SaveCliente(@RequestBody Cliente cliente){
-		DniResponseDTO data= callAPI(cliente.getDNI());
-		Cliente objResponse= new Cliente();
-		if(data.isSuccess()) {
-			String pass=cliente.getPassword();
-			cliente.setNombre(data.getData().getNombres());
-			cliente.setApePaterno(data.getData().getApellido_paterno());
-			cliente.setApeMaterno(data.getData().getApellido_materno());
-			cliente.setPassword(new SecurityConfig().passwordEncoder().encode(pass));
-			objResponse=clienteService.saveUpdateCliente(cliente);
-		}else {
-			objResponse= new Cliente();
+	public ResponseEntity<HashMap<String, Object>> SaveCliente(@RequestBody Cliente cliente){
+		
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+	
+		try
+		{
+			List<Cliente> lstCliente = clienteService.listaClienteporDni(cliente.getDNI());
+			List<Cliente> lstCliente2 = clienteService.listaClienteporCorreo(cliente.getCorreo());
+			
+			
+			if(CollectionUtils.isEmpty(lstCliente2))
+			{
+				if (CollectionUtils.isEmpty(lstCliente))
+				{
+					DniResponseDTO data= callAPI(cliente.getDNI());
+					Cliente objResponse= new Cliente();
+					if(data.isSuccess()) {
+						String pass=cliente.getPassword();
+						cliente.setNombre(data.getData().getNombres());
+						cliente.setApePaterno(data.getData().getApellido_paterno());
+						cliente.setApeMaterno(data.getData().getApellido_materno());
+						cliente.setPassword(new SecurityConfig().passwordEncoder().encode(pass));
+						objResponse=clienteService.saveUpdateCliente(cliente);
+						salida.put("mensaje", "Se registra correctamente al cliente");
+						salida.put("status", "OK");
+					}else {
+						objResponse= new Cliente();
+						salida.put("mensaje", "DNI no existe");
+						salida.put("status", "error");
+					}
+				}
+				else
+				{
+					salida.put("mensaje", "El cliente ya esta registrado : " + cliente.getDNI());
+					salida.put("status", "error");
+				}
+			}
+			else
+			{
+				salida.put("mensaje", "El correo ya esta siendo utilizado : " + cliente.getCorreo());
+				salida.put("status", "error");
+			}
+			
+			
+			
 		}
-		return new ResponseEntity<>(objResponse, HttpStatus.OK);
+		catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en el registro " + e.getMessage());
+			salida.put("status", "error");
+		}
+		return ResponseEntity.ok(salida);
+		
 	}
 	
 	@PostMapping("/ftpass")
@@ -75,6 +111,7 @@ public class ClienteController {
 	public ResponseEntity<SignInResponseDTO> forgotpassCliente( @RequestBody ForgotPasswordRequestDTO fgtpass){
 		Optional<Cliente> dataClient= clienteService.getCliente(fgtpass.getDni());
 		SignInResponseDTO response= new SignInResponseDTO();
+		
 		if(dataClient.get().getDNI().equals(fgtpass.getDni())) {
 			BCryptPasswordEncoder passEncode= new BCryptPasswordEncoder();
 			if(passEncode.matches(fgtpass.getPassword(), dataClient.get().getPassword())) {
@@ -89,6 +126,8 @@ public class ClienteController {
 			response.setSuccess(false);
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
+		
+		
 	}
 	
 	@PutMapping("/signUp")
@@ -96,6 +135,7 @@ public class ClienteController {
 	public ResponseEntity<Cliente> UpdateCliente(@RequestBody Cliente cliente){
 		DniResponseDTO data= callAPI(cliente.getDNI());
 		Cliente objResponse= new Cliente();
+		
 		if(data.isSuccess()) {
 			cliente.setNombre(data.getData().getNombres());
 			cliente.setApePaterno(data.getData().getApellido_paterno());
@@ -105,6 +145,8 @@ public class ClienteController {
 			objResponse= new Cliente();
 		}
 		return new ResponseEntity<>(objResponse, HttpStatus.OK);
+		
+		
 	}
 	
 	private DniResponseDTO callAPI(String dni) {
