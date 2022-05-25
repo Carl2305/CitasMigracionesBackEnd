@@ -11,6 +11,7 @@ import com.cita.migraciones.entitylayer.Cita;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Integer> {
 	
-
+	@Query("select e from Cita e where e.cliente.DNI =?1")
+	public List<Cita> listaCitaporDni(String DNI);
 
 }

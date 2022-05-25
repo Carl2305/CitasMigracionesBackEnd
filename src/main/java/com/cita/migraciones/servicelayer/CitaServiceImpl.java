@@ -33,4 +33,9 @@ public class CitaServiceImpl implements CitaService {
 		repository.deleteById(idCita);
 	}
 
+	@Override
+	public List<Cita> listaCitaporDni(String DNI) {
+		// TODO Auto-generated method stub
+		return repository.listaCitaporDni(DNI);
+	}
 }
