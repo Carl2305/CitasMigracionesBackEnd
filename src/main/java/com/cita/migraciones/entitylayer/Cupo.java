@@ -1,6 +1,8 @@
 package com.cita.migraciones.entitylayer;
 
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,8 +14,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,40 +28,28 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cita")
-public class Cita {
-
+@Table(name = "cupo")
+public class Cupo {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idCita;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-	private Date fechaRegistro;
+	private int idCupo;
 	
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idSede")
 	private Sede sede;
 	
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idRecibo")
-	private Recibo recibo;
-	
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idCupo")
-	private Cupo cupo;
-	
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DNI")
-	private Cliente cliente;
-	
-	public Cita(int idCita) {
-		this.idCita = idCita;
-	}
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
+	private Date fechaCupo;
 
+	private boolean estado;
+	
+	@OneToOne(mappedBy = "cupo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Cita cita;
+	
+	public Cupo(int idCupo) {
+		this.idCupo = idCupo;
+	}
 }
