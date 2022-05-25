@@ -33,10 +33,10 @@ public class CupoController {
 		return new ResponseEntity<>(cupoService.listCupo(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{idCupo}")
+	@GetMapping("/sede/{idSede}")
 	@ResponseBody
-	public ResponseEntity<Optional<Cupo>> getRecibo(@PathVariable(name = "idCupo") int idCupo){
-		return new ResponseEntity<>(cupoService.getCupo(idCupo), HttpStatus.OK);
+	public ResponseEntity<List<Cupo>> ListaCupoPorSede(@PathVariable(name = "idSede") int idSede){
+		return new ResponseEntity<>(cupoService.ListaCupoPorSede(idSede), HttpStatus.OK);
 	}
 	
 	@PostMapping

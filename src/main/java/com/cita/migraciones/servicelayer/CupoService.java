@@ -11,5 +11,6 @@ public interface CupoService {
 	public Optional<Cupo> getCupo(int idCupo);
 	public Cupo saveAndUpdateCupo(Cupo cupo);
 	public void deteleCupo(int idCupo);
+	public abstract List<Cupo> ListaCupoPorSede(int idSede);
 
 }
