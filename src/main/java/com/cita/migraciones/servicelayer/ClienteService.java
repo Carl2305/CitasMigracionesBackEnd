@@ -12,5 +12,6 @@ public interface ClienteService {
 	public List<Cliente> listCliente();
 	public Optional<Cliente> getCliente(String dni);
 	public abstract List <Cliente> listaClienteporDni(String DNI);
+	public abstract List <Cliente> listaClienteporCorreo(String correo);
 	
 }

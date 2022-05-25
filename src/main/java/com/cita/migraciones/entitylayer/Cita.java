@@ -1,5 +1,6 @@
 package com.cita.migraciones.entitylayer;
 
+import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,7 +36,7 @@ public class Cita {
 	private Date fechaRegistro;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
 	private Date fechaCita;
 
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })

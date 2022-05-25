@@ -58,34 +58,49 @@ public class ClienteController {
 		try
 		{
 			List<Cliente> lstCliente = clienteService.listaClienteporDni(cliente.getDNI());
+			List<Cliente> lstCliente2 = clienteService.listaClienteporCorreo(cliente.getCorreo());
 			
-			if (CollectionUtils.isEmpty(lstCliente))
+			
+			if(CollectionUtils.isEmpty(lstCliente2))
 			{
-				DniResponseDTO data= callAPI(cliente.getDNI());
-				Cliente objResponse= new Cliente();
-				if(data.isSuccess()) {
-					String pass=cliente.getPassword();
-					cliente.setNombre(data.getData().getNombres());
-					cliente.setApePaterno(data.getData().getApellido_paterno());
-					cliente.setApeMaterno(data.getData().getApellido_materno());
-					cliente.setPassword(new SecurityConfig().passwordEncoder().encode(pass));
-					objResponse=clienteService.saveUpdateCliente(cliente);
-					salida.put("mensaje", "Se registra correctamente al cliente");
-				}else {
-					objResponse= new Cliente();
-					salida.put("mensaje", "DNI no existe");
+				if (CollectionUtils.isEmpty(lstCliente))
+				{
+					DniResponseDTO data= callAPI(cliente.getDNI());
+					Cliente objResponse= new Cliente();
+					if(data.isSuccess()) {
+						String pass=cliente.getPassword();
+						cliente.setNombre(data.getData().getNombres());
+						cliente.setApePaterno(data.getData().getApellido_paterno());
+						cliente.setApeMaterno(data.getData().getApellido_materno());
+						cliente.setPassword(new SecurityConfig().passwordEncoder().encode(pass));
+						objResponse=clienteService.saveUpdateCliente(cliente);
+						salida.put("mensaje", "Se registra correctamente al cliente");
+						salida.put("status", "OK");
+					}else {
+						objResponse= new Cliente();
+						salida.put("mensaje", "DNI no existe");
+						salida.put("status", "error");
+					}
+				}
+				else
+				{
+					salida.put("mensaje", "El cliente ya esta registrado : " + cliente.getDNI());
+					salida.put("status", "error");
 				}
 			}
 			else
 			{
-				salida.put("mensaje", "El cliente ya esta registrado : " + cliente.getDNI());
+				salida.put("mensaje", "El correo ya esta siendo utilizado : " + cliente.getCorreo());
+				salida.put("status", "error");
 			}
+			
 			
 			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			salida.put("mensaje", "Error en el registro " + e.getMessage());
+			salida.put("status", "error");
 		}
 		return ResponseEntity.ok(salida);
 		
