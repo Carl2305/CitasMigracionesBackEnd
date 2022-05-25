@@ -24,13 +24,12 @@ import com.cita.migraciones.servicelayer.CupoService;
 @RequestMapping("/api/cupo")
 @CrossOrigin
 public class CupoController {
-
 	@Autowired
 	private CupoService cupoService;
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Cupo>> listRecibo(){
+	public ResponseEntity<List<Cupo>> listCupo(){
 		return new ResponseEntity<>(cupoService.listCupo(), HttpStatus.OK);
 	}
 	

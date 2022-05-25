@@ -28,9 +28,10 @@ public class CitaController {
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Cita>> listRecibo(){
+	public ResponseEntity<List<Cita>> listCita(){
 		return new ResponseEntity<>(citaService.listCita(), HttpStatus.OK);
 	}
+	
 	
 	@GetMapping("/{idCita}")
 	@ResponseBody

@@ -14,6 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,15 +39,11 @@ public class Cita {
 	
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idSede")
-	private Sede sede;
-	
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idRecibo")
 	private Recibo recibo;
 	
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@JsonManagedReference 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idCupo")
 	private Cupo cupo;

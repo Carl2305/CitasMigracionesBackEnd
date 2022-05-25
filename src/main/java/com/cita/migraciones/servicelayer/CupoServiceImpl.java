@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.cita.migraciones.entitylayer.Cupo;
 import com.cita.migraciones.repository.CupoRepository;
 
+@Service
 public class CupoServiceImpl implements CupoService {
 	
 	@Autowired
