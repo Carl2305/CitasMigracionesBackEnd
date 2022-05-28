@@ -35,5 +35,10 @@ public class CupoServiceImpl implements CupoService {
 		// TODO Auto-generated method stub
 		repository.deleteById(idCupo);
 	}
+	
+	@Override
+	public List<Cupo> ListaCupoPorSede(int idSede) {
+	return repository.ListaCupoPorSede(idSede);
+	}
 
 }

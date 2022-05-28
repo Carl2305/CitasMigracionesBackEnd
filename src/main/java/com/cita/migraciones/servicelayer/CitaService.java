@@ -9,4 +9,5 @@ public interface CitaService {
 	public Optional<Cita> getCita(int idCita);
 	public Cita saveAndUpdateCita(Cita cita);
 	public void deleteCita(int idCita);
+	public abstract List <Cita> listaCitaporDni(String DNI);
 }

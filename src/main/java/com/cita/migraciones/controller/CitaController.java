@@ -39,6 +39,13 @@ public class CitaController {
 		return new ResponseEntity<>(citaService.getCita(idCita), HttpStatus.OK);
 	}
 	
+	@GetMapping("/DNI/{DNI}")
+	@ResponseBody
+	public ResponseEntity<List<Cita>> listaCitaporDni(@PathVariable(name = "DNI") String DNI){
+		return new ResponseEntity<>(citaService.listaCitaporDni(DNI), HttpStatus.OK);
+	}
+	
+	
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<Cita> saveRecibo(@RequestBody Cita cita){
