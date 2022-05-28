@@ -1,6 +1,7 @@
 package com.cita.migraciones.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,11 @@ public class CitaController {
 	
 	@DeleteMapping("/{idCita}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCita") int idCita){
+	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idCita") int idCita){
 		citaService.deleteCita(idCita);
-		return new ResponseEntity<>("Cita Eliminada Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Cita Eliminada Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

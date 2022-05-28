@@ -1,5 +1,6 @@
 package com.cita.migraciones.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,8 +57,11 @@ public class CupoController {
 	
 	@DeleteMapping("/{idCupo}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
+	public ResponseEntity<HashMap<String, Object> > deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
 		cupoService.deteleCupo(idCupo);
-		return new ResponseEntity<>("Cita Eliminada Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Cupo Eliminado Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

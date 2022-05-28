@@ -75,7 +75,7 @@ public class ClienteController {
 						cliente.setPassword(new SecurityConfig().passwordEncoder().encode(pass));
 						objResponse=clienteService.saveUpdateCliente(cliente);
 						salida.put("mensaje", "Se registra correctamente al cliente");
-						salida.put("status", "OK");
+						salida.put("status", HttpStatus.OK);
 					}else {
 						objResponse= new Cliente();
 						salida.put("mensaje", "DNI no existe");
@@ -94,8 +94,6 @@ public class ClienteController {
 				salida.put("status", "error");
 			}
 			
-			
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -103,7 +101,7 @@ public class ClienteController {
 			salida.put("status", "error");
 		}
 		return ResponseEntity.ok(salida);
-		
+	
 	}
 	
 	@PostMapping("/ftpass")
@@ -111,7 +109,6 @@ public class ClienteController {
 	public ResponseEntity<SignInResponseDTO> forgotpassCliente( @RequestBody ForgotPasswordRequestDTO fgtpass){
 		Optional<Cliente> dataClient= clienteService.getCliente(fgtpass.getDni());
 		SignInResponseDTO response= new SignInResponseDTO();
-		
 		if(dataClient.get().getDNI().equals(fgtpass.getDni())) {
 			BCryptPasswordEncoder passEncode= new BCryptPasswordEncoder();
 			if(passEncode.matches(fgtpass.getPassword(), dataClient.get().getPassword())) {
@@ -126,34 +123,29 @@ public class ClienteController {
 			response.setSuccess(false);
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
-		
-		
 	}
 	
 	@PutMapping("/signUp")
 	@ResponseBody
 	public ResponseEntity<Cliente> UpdateCliente(@RequestBody Cliente cliente){
-		DniResponseDTO data= callAPI(cliente.getDNI());
+		Optional<Cliente> dataClient= clienteService.getCliente(cliente.getDNI());
 		Cliente objResponse= new Cliente();
-		
-		if(data.isSuccess()) {
-			cliente.setNombre(data.getData().getNombres());
-			cliente.setApePaterno(data.getData().getApellido_paterno());
-			cliente.setApeMaterno(data.getData().getApellido_materno());
+		if(dataClient!=null) {
+			cliente.setNombre(dataClient.get().getNombre());
+			cliente.setApePaterno(dataClient.get().getApePaterno());
+			cliente.setApeMaterno(dataClient.get().getApeMaterno());
+			cliente.setPassword(dataClient.get().getPassword());
 			objResponse=clienteService.saveUpdateCliente(cliente);
 		}else {
 			objResponse= new Cliente();
 		}
 		return new ResponseEntity<>(objResponse, HttpStatus.OK);
-		
-		
 	}
 	
 	private DniResponseDTO callAPI(String dni) {
 		String URI="https://apiperu.dev/api/dni/"+dni+"?api_token=6703575c39271aa186609a38725bf4a758aef76c0d27356e34cfbb88dfb7dd35";
 		RestTemplate restTemplate= new RestTemplate();
 		ResponseEntity<DniResponseDTO> result=restTemplate.getForEntity(URI, DniResponseDTO.class);
-		
 		return result.getBody();
 	}
 }

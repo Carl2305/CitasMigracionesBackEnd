@@ -55,13 +55,16 @@ public class ReciboController {
 						Recibo objSalida = reciboService.saveUpdateRecibo(recibo);
 						if (objSalida == null) {
 							salida.put("mensaje", "Error en el registro");
+							salida.put("status", "error");
 						} else {
 							salida.put("mensaje", "Registro exitoso");
+							salida.put("status", HttpStatus.OK);
 						}
 					} 
 					else 
 					{
 						salida.put("mensaje", "El codigo de voucher ya fue usado : " + recibo.getCodigoVoucher());
+						salida.put("status", "error");
 					}
 
 		}
@@ -83,8 +86,11 @@ public class ReciboController {
 	
 	@DeleteMapping("/{idRecibo}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idRecibo") int idRecibo){
+	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idRecibo") int idRecibo){
 		reciboService.deleteRecibo(idRecibo);
-		return new ResponseEntity<>("Recibo Eliminado Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Recibo Eliminado Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }
