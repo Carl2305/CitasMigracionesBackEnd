@@ -143,7 +143,7 @@ public class ClienteController {
 	}
 	
 	private DniResponseDTO callAPI(String dni) {
-		String URI="https://apiperu.dev/api/dni/"+dni+"?api_token=6703575c39271aa186609a38725bf4a758aef76c0d27356e34cfbb88dfb7dd35";
+		String URI="https://apiperu.dev/api/dni/"+dni.trim()+"?api_token=6703575c39271aa186609a38725bf4a758aef76c0d27356e34cfbb88dfb7dd35";
 		RestTemplate restTemplate= new RestTemplate();
 		ResponseEntity<DniResponseDTO> result=restTemplate.getForEntity(URI, DniResponseDTO.class);
 		return result.getBody();
