@@ -15,4 +15,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, String> {
 	
 	@Query("select e from Cliente e where e.correo =?1")
 	public List<Cliente> listaporCorreo(String correo);
+	
+	
 }

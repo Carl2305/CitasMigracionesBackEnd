@@ -2,6 +2,7 @@ package com.cita.migraciones.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -156,4 +160,26 @@ public class ClienteController {
 		
 		return result.getBody();
 	}
+	
+	@PostMapping("/listaPorDNI/{dni}")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> encontrarCliente(@PathVariable("dni") String DNI
+			)
+	{
+		Map<String, Object> salida = new HashMap<>();
+		try {
+			List<Cliente> cliente = clienteService.listaClienteporDni(DNI);
+			Cliente objCliente = new Cliente();
+			objCliente = cliente.get(0);
+			salida.put("data", objCliente);
+			salida.put("status", "OK");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en el registro " + e.getMessage());
+			salida.put("status", "error");
+		}	
+		return ResponseEntity.ok(salida);
+	}
+	
 }
