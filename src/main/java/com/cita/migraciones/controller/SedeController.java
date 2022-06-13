@@ -1,14 +1,14 @@
 package com.cita.migraciones.controller;
 
-import java.util.List;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.cita.migraciones.entitylayer.Sede;
 import com.cita.migraciones.servicelayer.SedeService;
 
 @RestController
@@ -21,7 +21,15 @@ public class SedeController {
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Sede>> listReclamo(){
-		return ResponseEntity.ok(sedeService.listSede());
+	public ResponseEntity<HashMap<String, Object>> listReclamo(){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", sedeService.listSede());
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	} 
 }

@@ -2,7 +2,6 @@ package com.cita.migraciones.controller;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +28,30 @@ public class ReciboController {
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Recibo>> listRecibo(){
-		return new ResponseEntity<>(reciboService.listRecibo(), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> listRecibo(){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", reciboService.listRecibo());
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{idRecibo}")
 	@ResponseBody
-	public ResponseEntity<Optional<Recibo>> getRecibo(@PathVariable(name = "idRecibo") int idRecibo){
-		return new ResponseEntity<>(reciboService.getRecibo(idRecibo), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> getRecibo(@PathVariable(name = "idRecibo") int idRecibo){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", reciboService.getRecibo(idRecibo));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@PostMapping
@@ -55,13 +70,16 @@ public class ReciboController {
 						Recibo objSalida = reciboService.saveUpdateRecibo(recibo);
 						if (objSalida == null) {
 							salida.put("mensaje", "Error en el registro");
+							salida.put("status", "error");
 						} else {
 							salida.put("mensaje", "Registro exitoso");
+							salida.put("status", HttpStatus.OK);
 						}
 					} 
 					else 
 					{
 						salida.put("mensaje", "El codigo de voucher ya fue usado : " + recibo.getCodigoVoucher());
+						salida.put("status", "error");
 					}
 
 		}
@@ -83,8 +101,11 @@ public class ReciboController {
 	
 	@DeleteMapping("/{idRecibo}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idRecibo") int idRecibo){
+	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idRecibo") int idRecibo){
 		reciboService.deleteRecibo(idRecibo);
-		return new ResponseEntity<>("Recibo Eliminado Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Recibo Eliminado Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

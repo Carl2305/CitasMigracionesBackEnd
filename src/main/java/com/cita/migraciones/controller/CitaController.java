@@ -1,8 +1,7 @@
 package com.cita.migraciones.controller;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +27,45 @@ public class CitaController {
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Cita>> listCita(){
-		return new ResponseEntity<>(citaService.listCita(), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> listCita(){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", citaService.listCita());
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	
 	@GetMapping("/{idCita}")
 	@ResponseBody
-	public ResponseEntity<Optional<Cita>> getRecibo(@PathVariable(name = "idCita") int idCita){
-		return new ResponseEntity<>(citaService.getCita(idCita), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> getRecibo(@PathVariable(name = "idCita") int idCita){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", citaService.getCita(idCita));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@GetMapping("/DNI/{DNI}")
 	@ResponseBody
-	public ResponseEntity<List<Cita>> listaCitaporDni(@PathVariable(name = "DNI") String DNI){
-		return new ResponseEntity<>(citaService.listaCitaporDni(DNI), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> listaCitaporDni(@PathVariable(name = "DNI") String DNI){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", citaService.listaCitaporDni(DNI));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	
@@ -63,8 +86,11 @@ public class CitaController {
 	
 	@DeleteMapping("/{idCita}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCita") int idCita){
+	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idCita") int idCita){
 		citaService.deleteCita(idCita);
-		return new ResponseEntity<>("Cita Eliminada Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Cita Eliminada Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

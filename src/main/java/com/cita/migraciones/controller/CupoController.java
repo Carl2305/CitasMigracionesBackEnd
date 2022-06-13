@@ -1,8 +1,6 @@
 package com.cita.migraciones.controller;
 
-import java.util.List;
-import java.util.Optional;
-
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +27,30 @@ public class CupoController {
 	
 	@GetMapping("/all")
 	@ResponseBody
-	public ResponseEntity<List<Cupo>> listCupo(){
-		return new ResponseEntity<>(cupoService.listCupo(), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> listCupo(){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", cupoService.listCupo());
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@GetMapping("/sede/{idSede}")
 	@ResponseBody
-	public ResponseEntity<List<Cupo>> ListaCupoPorSede(@PathVariable(name = "idSede") int idSede){
-		return new ResponseEntity<>(cupoService.ListaCupoPorSede(idSede), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> ListaCupoPorSede(@PathVariable(name = "idSede") int idSede){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			salida.put("data", cupoService.ListaCupoPorSede(idSede));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@PostMapping
@@ -56,8 +70,11 @@ public class CupoController {
 	
 	@DeleteMapping("/{idCupo}")
 	@ResponseBody
-	public ResponseEntity<String> deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
+	public ResponseEntity<HashMap<String, Object> > deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
 		cupoService.deteleCupo(idCupo);
-		return new ResponseEntity<>("Cita Eliminada Correctamente", HttpStatus.OK);
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		salida.put("mensaje", "Cupo Eliminado Correctamente");
+		salida.put("status", HttpStatus.OK);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }
