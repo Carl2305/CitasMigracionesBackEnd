@@ -42,7 +42,7 @@ public class CitaController {
 	
 	@GetMapping("/{idCita}")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> getRecibo(@PathVariable(name = "idCita") int idCita){
+	public ResponseEntity<HashMap<String, Object>> getCita(@PathVariable(name = "idCita") int idCita){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {
 			salida.put("data", citaService.getCita(idCita));
@@ -71,7 +71,7 @@ public class CitaController {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Cita> saveRecibo(@RequestBody Cita cita){
+	public ResponseEntity<Cita> saveCita(@RequestBody Cita cita){
 		cita.setIdCita(0);
 		cita.setFechaRegistro(new Date());
 		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class CitaController {
 	
 	@PutMapping
 	@ResponseBody
-	public ResponseEntity<Cita> updateRecibo(@RequestBody Cita cita){
+	public ResponseEntity<Cita> updateCita(@RequestBody Cita cita){
 		cita.setFechaRegistro(new Date());
 		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
 	}

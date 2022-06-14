@@ -12,4 +12,5 @@ public interface ReciboRepository extends JpaRepository<Recibo, Integer> {
 	
 	@Query("select e from Recibo e where e.codigoVoucher =?1")
 	public List<Recibo> listaReciboPorID(String codigoVoucher);
+	
 }

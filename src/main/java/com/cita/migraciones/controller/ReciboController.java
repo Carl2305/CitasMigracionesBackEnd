@@ -54,6 +54,21 @@ public class ReciboController {
 		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
+	@GetMapping("/cv/{codigoVoucher}")
+	@ResponseBody
+	public ResponseEntity<HashMap<String, Object>> getReciboCodigoVoucher(@PathVariable(name = "codigoVoucher") String codigoVoucher){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			
+			salida.put("data", reciboService.listaReciboPorID(codigoVoucher).get(0));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
+	}
+	
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<HashMap<String, Object>> saveRecibo(@RequestBody Recibo recibo){
