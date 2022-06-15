@@ -1,5 +1,6 @@
 package com.cita.migraciones.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class CitaController {
 			salida.put("data", citaService.listCita());
 			salida.put("status", HttpStatus.OK);
 		} catch (Exception e) {
-			salida.put("data", new Object());
+			salida.put("data", new ArrayList<>());
 			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);
@@ -71,26 +72,48 @@ public class CitaController {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Cita> saveCita(@RequestBody Cita cita){
-		cita.setIdCita(0);
-		cita.setFechaRegistro(new Date());
-		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> saveCita(@RequestBody Cita cita){
+		
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			cita.setIdCita(0);
+			cita.setFechaRegistro(new Date());
+			salida.put("data", citaService.saveAndUpdateCita(cita));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@PutMapping
 	@ResponseBody
-	public ResponseEntity<Cita> updateCita(@RequestBody Cita cita){
-		cita.setFechaRegistro(new Date());
-		return new ResponseEntity<>(citaService.saveAndUpdateCita(cita), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> updateCita(@RequestBody Cita cita){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			cita.setFechaRegistro(new Date());
+			salida.put("data", citaService.saveAndUpdateCita(cita));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{idCita}")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idCita") int idCita){
-		citaService.deleteCita(idCita);
+	public ResponseEntity<HashMap<String, Object>> deleteCita(@PathVariable(name = "idCita") int idCita){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
-		salida.put("mensaje", "Cita Eliminada Correctamente");
-		salida.put("status", HttpStatus.OK);
+		try {
+			citaService.deleteCita(idCita);
+			salida.put("mensaje", "Cita Eliminada Correctamente");
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("mensaje", "Error en el Eliminar" + e.getMessage());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

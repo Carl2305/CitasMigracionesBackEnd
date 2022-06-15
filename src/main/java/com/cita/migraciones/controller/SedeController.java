@@ -1,5 +1,6 @@
 package com.cita.migraciones.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class SedeController {
 			salida.put("data", sedeService.listSede());
 			salida.put("status", HttpStatus.OK);
 		} catch (Exception e) {
-			salida.put("data", new Object());
+			salida.put("data", new ArrayList<>());
 			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);

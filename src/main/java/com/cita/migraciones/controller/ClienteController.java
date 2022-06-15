@@ -2,7 +2,6 @@ package com.cita.migraciones.controller;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -56,14 +54,11 @@ public class ClienteController {
 	@PostMapping("/signUp")
 	@ResponseBody
 	public ResponseEntity<HashMap<String, Object>> SaveCliente(@RequestBody Cliente cliente){
-		
 		HashMap<String, Object> salida = new HashMap<String, Object>();
-	
 		try
 		{
 			List<Cliente> lstCliente = clienteService.listaClienteporDni(cliente.getDNI());
 			List<Cliente> lstCliente2 = clienteService.listaClienteporCorreo(cliente.getCorreo());
-			
 			
 			if(CollectionUtils.isEmpty(lstCliente2))
 			{
@@ -102,10 +97,9 @@ public class ClienteController {
 		catch (Exception e) {
 			e.printStackTrace();
 			salida.put("mensaje", "Error en el registro " + e.getMessage());
-			salida.put("status", "error");
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return ResponseEntity.ok(salida);
-	
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@PostMapping("/ftpass")
@@ -146,6 +140,48 @@ public class ClienteController {
 		return new ResponseEntity<>(objResponse, HttpStatus.OK);
 	}
 	
+	@PostMapping("/listaPorDNI/{dni}")
+	@ResponseBody
+	public ResponseEntity<HashMap<String,Object>> encontrarCliente(@PathVariable("dni") String DNI)
+	{
+		HashMap<String, Object> salida = new HashMap<>();
+		try {
+			List<Cliente> cliente = clienteService.listaClienteporDni(DNI);
+			Cliente objCliente = new Cliente();
+			objCliente = cliente.get(0);
+			salida.put("data", objCliente);
+			salida.put("status", HttpStatus.OK);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en el registro " + e.getMessage());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return new ResponseEntity<HashMap<String, Object>>(salida,HttpStatus.OK);
+	}
+	
+	@GetMapping("/validarDNI/{dni}")
+	private ResponseEntity<HashMap<String,Object>> callAPIDNI(@PathVariable("dni") String dni) {
+		HashMap<String, Object> salida = new HashMap<>();
+		DniResponseDTO objDTO = new DniResponseDTO();
+		try {
+			objDTO =callAPI(dni.trim());
+			if(objDTO.isSuccess()){
+				salida.put("mensaje", objDTO.getData().getNombre_completo()) ;
+				salida.put("status", HttpStatus.OK);
+			}else{
+				salida.put("mensaje", "") ;
+				salida.put("status", "error");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje", "Error en el validar " + e.getMessage());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<HashMap<String, Object>>(salida,HttpStatus.OK);
+		
+	}
+	
 	private DniResponseDTO callAPI(String dni) {
 		String URI="https://apiperu.dev/api/dni/"+dni.trim()+"?api_token=6703575c39271aa186609a38725bf4a758aef76c0d27356e34cfbb88dfb7dd35";
 		RestTemplate restTemplate= new RestTemplate();
@@ -153,47 +189,5 @@ public class ClienteController {
 		return result.getBody();
 	}
 	
-	@PostMapping("/listaPorDNI/{dni}")
-	@ResponseBody
-	public ResponseEntity<Map<String,Object>> encontrarCliente(@PathVariable("dni") String DNI
-			)
-	{
-		Map<String, Object> salida = new HashMap<>();
-		try {
-			List<Cliente> cliente = clienteService.listaClienteporDni(DNI);
-			Cliente objCliente = new Cliente();
-			objCliente = cliente.get(0);
-			salida.put("data", objCliente);
-			salida.put("status", "OK");
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-			salida.put("mensaje", "Error en el registro " + e.getMessage());
-			salida.put("status", "error");
-		}	
-		return new ResponseEntity<Map<String, Object>>(salida,HttpStatus.OK);
-	}
-	
-	@GetMapping("/validarDNI/{dni}")
-	private ResponseEntity<Map<String,Object>> callAPIDNI(@PathVariable("dni") String dni) {
-		DniResponseDTO objDTO = new DniResponseDTO();
-		HashMap<String, Object> salida = new HashMap<String, Object>();
-		String URI="https://apiperu.dev/api/dni/"+dni.trim()+"?api_token=6703575c39271aa186609a38725bf4a758aef76c0d27356e34cfbb88dfb7dd35";
-		RestTemplate restTemplate= new RestTemplate();
-		ResponseEntity<DniResponseDTO> result=restTemplate.getForEntity(URI, DniResponseDTO.class);
-		objDTO = result.getBody();
-		if(objDTO.isSuccess())
-		{
-			salida.put("mensaje", objDTO.getData().getNombre_completo()) ;
-			salida.put("status", "OK");
-		}
-		else
-		{
-			salida.put("mensaje", "") ;
-			salida.put("status", "error");
-		}
-		return new ResponseEntity<Map<String, Object>>(salida,HttpStatus.OK);
-		
-	}
 	
 }

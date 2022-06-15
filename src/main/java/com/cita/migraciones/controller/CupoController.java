@@ -55,26 +55,47 @@ public class CupoController {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Cupo> saveRecibo(@RequestBody Cupo cupo){
-		cupo.setIdCupo(0);
-		cupo.setEstado(false);
-		return new ResponseEntity<>(cupoService.saveAndUpdateCupo(cupo), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> saveCupo(@RequestBody Cupo cupo){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			cupo.setIdCupo(0);
+			cupo.setEstado(false);
+			salida.put("data", cupoService.saveAndUpdateCupo(cupo));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@PutMapping
 	@ResponseBody
-	public ResponseEntity<Cupo> updateRecibo(@RequestBody Cupo cupo){
-		cupo.setEstado(true);
-		return new ResponseEntity<>(cupoService.saveAndUpdateCupo(cupo), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> updateCupo(@RequestBody Cupo cupo){
+		HashMap<String, Object> salida = new HashMap<String, Object>();
+		try {
+			cupo.setEstado(true);
+			salida.put("data", cupoService.saveAndUpdateCupo(cupo));
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("data", new Object());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{idCupo}")
 	@ResponseBody
-	public ResponseEntity<HashMap<String, Object> > deleteRecibo(@PathVariable(name = "idCupo") int idCupo){
-		cupoService.deteleCupo(idCupo);
+	public ResponseEntity<HashMap<String, Object> > deleteCupo(@PathVariable(name = "idCupo") int idCupo){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
-		salida.put("mensaje", "Cupo Eliminado Correctamente");
-		salida.put("status", HttpStatus.OK);
+		try {
+			cupoService.deteleCupo(idCupo);
+			salida.put("mensaje", "Cupo Eliminado Correctamente");
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("mensaje", "Error en el Eliminar" + e.getMessage());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }

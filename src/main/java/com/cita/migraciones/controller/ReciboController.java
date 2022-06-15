@@ -1,5 +1,6 @@
 package com.cita.migraciones.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ReciboController {
 			salida.put("data", reciboService.listRecibo());
 			salida.put("status", HttpStatus.OK);
 		} catch (Exception e) {
-			salida.put("data", new Object());
+			salida.put("data", new ArrayList<>());
 			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);
@@ -59,7 +60,6 @@ public class ReciboController {
 	public ResponseEntity<HashMap<String, Object>> getReciboCodigoVoucher(@PathVariable(name = "codigoVoucher") String codigoVoucher){
 		HashMap<String, Object> salida = new HashMap<String, Object>();
 		try {
-			
 			salida.put("data", reciboService.listaReciboPorID(codigoVoucher).get(0));
 			salida.put("status", HttpStatus.OK);
 		} catch (Exception e) {
@@ -101,10 +101,10 @@ public class ReciboController {
 		catch (Exception e) {
 			e.printStackTrace();
 			salida.put("mensaje", "Error en el registro " + e.getMessage());
-			salida.put("status", "error");
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return ResponseEntity.ok(salida);
+		return new ResponseEntity<>(salida, HttpStatus.OK);
 		
 	}
 	
@@ -117,10 +117,15 @@ public class ReciboController {
 	@DeleteMapping("/{idRecibo}")
 	@ResponseBody
 	public ResponseEntity<HashMap<String, Object>> deleteRecibo(@PathVariable(name = "idRecibo") int idRecibo){
-		reciboService.deleteRecibo(idRecibo);
 		HashMap<String, Object> salida = new HashMap<String, Object>();
-		salida.put("mensaje", "Recibo Eliminado Correctamente");
-		salida.put("status", HttpStatus.OK);
+		try {
+			reciboService.deleteRecibo(idRecibo);
+			salida.put("mensaje", "Recibo Eliminado Correctamente");
+			salida.put("status", HttpStatus.OK);
+		} catch (Exception e) {
+			salida.put("mensaje", "Error en el Eliminar" + e.getMessage());
+			salida.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return new ResponseEntity<>(salida, HttpStatus.OK);
 	}
 }
