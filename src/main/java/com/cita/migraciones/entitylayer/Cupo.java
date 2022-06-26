@@ -47,7 +47,7 @@ public class Cupo {
 
 	private boolean estado;
 	
-	@OneToOne(mappedBy = "cupo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "cupo", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
 	@JsonBackReference
     private Cita cita;
 	
